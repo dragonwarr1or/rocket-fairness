@@ -1,23 +1,19 @@
 # Verify Ton Rocket Fair
-This game uses two ingredients:
 
-*Server Seed* - provided by us
-*Client Seed* - the hash from Ethereum block
+This game ensures fairness through a dynamic process involving a **Server Seed** and a **Client Seed**. The Server Seed, initially provided by us, undergoes multiple hashing iterations, generating a sequence of 4 million server seeds. Each game uses a server seed from this sequence, creating a transparent and verifiable gaming environment.
 
-We take a Server Seed and hash it (SHA256), creating a new Server Seed. Then we take that Server Seed and hash that too. We repeat this process until we have 4 million hashes -- 4 million server seeds. The very first game uses the 4 millionth server seed (in the codesandbox below), and each game after that works backwards down the list of server seeds. Second game uses the 3,999,999th hash and so on and so forth.
+The Client Seed, a public key agreed upon before revelation, is based on the hash of an Ethereum block. This commitment to the hash occurs before the block is mined, ensuring that outcomes are beyond our control. The current Client Seed is presented below.
 
-The Client Seed is a public key that we agree to using before we know what it is. We commit to the hash of a crypto block before that block is mined, and we create all the server seed hashes before committing to this block. This ensures that we could not control the outcome of each game. The current Client Seed is in the codesandbox below.
+To verify fairness, input the Server Seed into the provided code. You'll witness the server seeds and game results for the last 100 games.
 
-To verify this, you can input the Server Seed to your game in the code below, and you should see the server seeds and game results for the previous 100 games.
-
+Javascript
 ```
 const crypto = require("crypto");
-
 
 // Write Last Game Hash Here
 const crashHash = "";
 
-// Client Seed: hash of ETH block 18841250
+// Client Seed - hash of ETH block 18841250
 const tonRocketClientSeed =
   "0xc582b3fb66319ab47ab592291c9799a22ff21c5d40733e159a04d663dec2ce6e";
 
