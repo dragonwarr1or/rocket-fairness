@@ -11,65 +11,68 @@ Javascript
 const crypto = require("crypto");
 
 // Write Last Game Hash Here
-const crashHash = "";
+const lastGameHash = "";
 
-// Client Seed - hash of ETH block 18841250
+// Client Seed: hash of ETH block 18841250
 const tonRocketClientSeed =
   "0xc582b3fb66319ab47ab592291c9799a22ff21c5d40733e159a04d663dec2ce6e";
 
-function generateHash(seed) {
-  return crypto.createHash("sha256").update(seed).digest("hex");
-}
+// Function to generate hash from a given seed
+const generateHash = (seed) =>
+  crypto.createHash("sha256").update(seed).digest("hex");
 
-function divisible(hash, mod) {
-  // We will read in 4 hex at a time, but the first chunk might be a bit smaller
-  // So ABCDEFGHIJ should be chunked like  AB CDEF GHIJ
-  var val = 0;
+// Function to check if a hash is divisible by a given modulo
+const isHashDivisible = (hash, mod) => {
+  let value = 0;
+  const offset = hash.length % 4;
 
-  var o = hash.length % 4;
-  for (var i = o > 0 ? o - 4 : 0; i < hash.length; i += 4) {
-    val = ((val << 16) + parseInt(hash.substring(i, i + 4), 16)) % mod;
+  for (let i = offset > 0 ? offset - 4 : 0; i < hash.length; i += 4) {
+    value = ((value << 16) + parseInt(hash.substring(i, i + 4), 16)) % mod;
   }
 
-  return val === 0;
-}
+  return value === 0;
+};
 
-function crashPointFromHash(serverSeed) {
+// Function to calculate the crash point based on the server seed and client seed
+const calculateCrashPoint = (serverSeed) => {
   const hash = crypto
     .createHmac("sha256", serverSeed)
     .update(tonRocketClientSeed)
     .digest("hex");
 
-  const hs = parseInt(100 / 4);
-  if (divisible(hash, hs)) {
+  const divisibleFactor = parseInt(100 / 4);
+  if (isHashDivisible(hash, divisibleFactor)) {
     return 1;
   }
 
-  const h = parseInt(hash.slice(0, 52 / 4), 16);
-  const e = Math.pow(2, 52);
+  const hashValue = parseInt(hash.slice(0, 52 / 4), 16);
+  const exponent = Math.pow(2, 52);
 
-  return Math.floor((100 * e - h) / (e - h)) / 100.0;
-}
+  return Math.floor((100 * exponent - hashValue) / (exponent - hashValue)) / 100.0;
+};
 
-function getPreviousGames() {
+// Function to get the results of the previous 100 games
+const getPreviousGameResults = () => {
   const previousGames = [];
-  let gameHash = generateHash(crashHash);
+  let currentGameHash = generateHash(lastGameHash);
 
   for (let i = 0; i < 100; i++) {
-    const gameResult = crashPointFromHash(gameHash);
-    previousGames.push({ gameHash, gameResult });
-    gameHash = generateHash(gameHash);
+    const gameResult = calculateCrashPoint(currentGameHash);
+    previousGames.push({ gameHash: currentGameHash, gameResult });
+    currentGameHash = generateHash(currentGameHash);
   }
 
   return previousGames;
-}
+};
 
-function verifyCrash() {
-  const gameResult = crashPointFromHash(crashHash);
-  const previousHundredGames = getPreviousGames();
+// Function to verify the crash outcome
+const verifyCrash = () => {
+  const currentGameResult = calculateCrashPoint(lastGameHash);
+  const previousHundredGames = getPreviousGameResults();
 
-  return { gameResult, previousHundredGames };
-}
+  return { currentGameResult, previousHundredGames };
+};
 
+// Output verification results
 console.log(verifyCrash());
 ```
