@@ -1,10 +1,20 @@
 # Verify Ton Rocket Fair
+This game uses two ingredients:
+
+*Server Seed* - provided by us
+*Client Seed* - the hash from Ethereum block
+
+We take a Server Seed and hash it (SHA256), creating a new Server Seed. Then we take that Server Seed and hash that too. We repeat this process until we have 4 million hashes -- 4 million server seeds. The very first game uses the 4 millionth server seed (in the codesandbox below), and each game after that works backwards down the list of server seeds. Second game uses the 3,999,999th hash and so on and so forth.
+
+The Client Seed is a public key that we agree to using before we know what it is. We commit to the hash of a crypto block before that block is mined, and we create all the server seed hashes before committing to this block. This ensures that we could not control the outcome of each game. The current Client Seed is in the codesandbox below.
+
+To verify this, you can input the Server Seed to your game in the code below, and you should see the server seeds and game results for the previous 100 games.
 
 ```
 const crypto = require("crypto");
 
 
-// Write Game Hash Here
+// Write Last Game Hash Here
 const crashHash = "";
 
 // Client Seed: hash of ETH block 18841250
