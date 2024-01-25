@@ -1,8 +1,8 @@
-# Verify Ton Rocket Fair
+# Verify Space Odyssey Fair
 
 This game ensures fairness through a dynamic process involving a **Server Seed** and a **Client Seed**. The Server Seed, initially provided by us, undergoes multiple hashing iterations, generating a sequence of 4 million server seeds. Each game uses a server seed from this sequence, creating a transparent and verifiable gaming environment.
 
-The Client Seed, a public key agreed upon before revelation, is based on the hash of an Ethereum block. This commitment to the hash occurs before the block is mined, ensuring that outcomes are beyond our control. The current Client Seed is presented below.
+The Client Seed, a public key agreed upon before revelation, is based on the hash of an TON block. This commitment to the hash occurs before the block is mined, ensuring that outcomes are beyond our control. The current Client Seed is presented below.
 
 To verify fairness, input the Server Seed into the provided code. You'll witness the server seeds and game results for the last 100 games.
 
@@ -13,9 +13,9 @@ const crypto = require("crypto");
 // Write Last Game Hash Here
 const lastGameHash = "";
 
-// Client Seed: hash of ETH block 18841250
-const tonRocketClientSeed =
-  "0xc582b3fb66319ab47ab592291c9799a22ff21c5d40733e159a04d663dec2ce6e";
+// Client Seed: hash of Ton Block https://tonviewer.com/transaction/ifAlY3N7Mw52d3-84FS31wZjzar1IurGp3OcAu0l5VE=
+const spaceOdysseyClientSeed =
+  "ifAlY3N7Mw52d3-84FS31wZjzar1IurGp3OcAu0l5VE";
 
 // Function to generate hash from a given seed
 const generateHash = (seed) =>
@@ -37,7 +37,7 @@ const isHashDivisible = (hash, mod) => {
 const calculateCrashPoint = (serverSeed) => {
   const hash = crypto
     .createHmac("sha256", serverSeed)
-    .update(tonRocketClientSeed)
+    .update(spaceOdysseyClientSeed)
     .digest("hex");
 
   const divisibleFactor = parseInt(100 / 4);
