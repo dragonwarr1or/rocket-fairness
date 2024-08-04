@@ -40,7 +40,7 @@ const calculateCrashPoint = (serverSeed) => {
     .update(spaceOdysseyClientSeed)
     .digest("hex");
 
-  if (divisible(hash, 101)) return 0;
+  if (divisible(hash, Math.floor(100 / 3.5))) return 0;
 
   const hashValue = parseInt(hash.slice(0, 52 / 4), 16);
   const exponent = Math.pow(2, 52);
